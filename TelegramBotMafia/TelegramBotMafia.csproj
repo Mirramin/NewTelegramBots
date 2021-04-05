@@ -12,8 +12,6 @@
     <ItemGroup>
       <Folder Include="DataBase" />
       <Folder Include="Handlers" />
-      <Folder Include="Interfaces" />
-      <Folder Include="Models" />
     </ItemGroup>
 
 </Project>
