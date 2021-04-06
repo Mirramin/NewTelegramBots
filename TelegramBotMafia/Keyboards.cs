@@ -14,5 +14,29 @@ namespace TelegramBotMafia
                 }
             });
         }
+
+        public static InlineKeyboardMarkup StartGame()
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Приєднатись", "ConnectToGame"),
+                    InlineKeyboardButton.WithSwitchInlineQuery("test", "/start"),  
+                    
+                }
+            });
+        }
+
+        public static InlineKeyboardMarkup Settings()
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData(""), 
+                }
+            });
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System.Linq;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
+using TelegramBotMafia.Interfaces;
 using TelegramBotMafia.Models;
 
 namespace TelegramBotMafia
@@ -23,6 +24,65 @@ namespace TelegramBotMafia
                         
                          await Program.bot.SendTextMessageAsync(e.Message.Chat.Id, Text.StartInChat,
                             replyMarkup: Keyboards.CheckAdminsRoot());
+                    }
+                }
+                else if(e.Message.LeftChatMember != null)
+                {
+                    Chat.Chats.Remove(Chat.GetChatOrNull(e.Message.Chat.Id));
+                }
+                else
+                {
+                    var chat = Chat.GetChatOrNull(e.Message.Chat.Id);
+
+                    if (e.Message.Text == "/createChat")
+                    {
+                        Chat.Chats.Add(new Chat(e.Message.Chat.Id));
+                        await Program.bot.SendTextMessageAsync(e.Message.Chat.Id, "Done");
+                    }
+                    
+                    if (chat == null) // Створює новий екземпляр групи, якщо її не існувало раніше
+                    {
+                        return;
+                    }
+
+                    if (!chat.CheckAdminsRoot().Result)
+                    {
+                        await Program.bot.SendTextMessageAsync(chat.Id, Text.StartInChat,
+                            replyMarkup: Keyboards.CheckAdminsRoot());
+                        return;
+                    }
+                    
+                    switch (e.Message.Text)
+                    {
+                        case "/game": // Start game
+                            if (chat.CheckAdminsRoot().Result)
+                            {
+                                // Start game
+                                var msg = await Program.bot.SendTextMessageAsync(chat.Id, Text.StartGame,
+                                    replyMarkup: Keyboards.StartGame());
+
+                                chat.MsgAboutStartGameId = msg.MessageId;
+                                Game.Games.Add(new Game(chat));
+                                
+                            }
+                            
+                            break;
+                        case "/setting": // Settings of game
+                            if (
+                                Program.bot.GetChatAdministratorsAsync(chat.Id).Result.FirstOrDefault(
+                                    x => x.User.Id == e.Message.From.Id) != null)
+                            {
+                                await Program.bot.SendTextMessageAsync(
+                                    e.Message.From.Id,
+                                    "Виберіть, які налаштування ви б хотіли змінити:",
+                                    replyMarkup: Keyboards.Settings()
+                                );
+                            }
+                            else
+                            {
+                                await Program.bot.SendTextMessageAsync(e.Message.From.Id, "Ви не адміністрітор чату!");
+                            }
+                            break;
                     }
                 }
             }
@@ -52,11 +112,19 @@ namespace TelegramBotMafia
                     }
                     else
                     {
-                        await Program.bot.SendTextMessageAsync(chat.Id, Text.StartInChat,
-                            replyMarkup: Keyboards.CheckAdminsRoot());
+                        await Program.bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id, "Права не надані!");
                     }
 
 
+                    break;
+                case "ConnectToGame":
+                    IGame game = Game.GetGameOrNull(e.CallbackQuery.Message.Chat.Id);
+                    if (game == null) return;
+                    
+                    
+                    
+                    game.AddUser(e.CallbackQuery.From);
+                    
                     break;
             }
         }

@@ -15,6 +15,15 @@ namespace TelegramBotMafia.Models
         
         public long Id { get; set; }
         public List<int> Garbage { get; set; }
+        public int MsgAboutStartGameId { get; set; }
+        
+        // setting room
+        public int startTime { get; set; }
+        public int countPlayers { get; set; }
+        public int voteTime { get; set; }
+        public int nigthTime { get; set; }
+        public int minCounterPeople { get; set; }
+        
         
         public async Task<bool> CheckAdminsRoot()
         {

@@ -11,6 +11,9 @@ namespace TelegramBotMafia.Interfaces
         // Список ідентифікаторів повідомлень, які варто видалити
         public List<int> Garbage { get; set; }
         
+        // id повідомлення про початок набору гравців на гру
+        public int MsgAboutStartGameId { get; set; }
+        
         // Перевіряє права бота в цьому чаті
         public Task<bool> CheckAdminsRoot();
         
