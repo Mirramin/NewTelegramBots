@@ -88,7 +88,17 @@ namespace TelegramBotMafia.Models
 
         private async void StartNigthVoting()
         {
-            
+            foreach (var player in roles)
+            {
+                if (player is Mafia)
+                {
+                    var players = from role in roles where role.IsDead == true select role.user;
+                    
+                    await Program.bot.SendTextMessageAsync(player.user.Id, 
+                        "Виберіть, кого ви бажаєте вбити цієї ночі:",
+                        replyMarkup: Keyboards.ChoiseMafia(players.ToList()));
+                }
+            }
         }
         
         private async void GiveRoles()

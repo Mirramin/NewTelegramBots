@@ -12,6 +12,8 @@ namespace TelegramBotMafia.Interfaces
         // Список гравців
         public List<User> players { get; set; }
         
+        public List<IRole> roles { get; set; }
+        
         // Список ідентифікаторів гравців, які хочуть приєднатись до гри
         public List<long> ConnectedUsersId { get; set; }
         

@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using TelegramBotMafia.Handlers;
 using TelegramBotMafia.Interfaces;
 using TelegramBotMafia.Models;
+using Chat = TelegramBotMafia.Models.Chat;
+using Game = TelegramBotMafia.Models.Game;
 
 namespace TelegramBotMafia
 {
@@ -117,7 +120,20 @@ namespace TelegramBotMafia
         
         public async static void OnCallbackQuery(object sender, CallbackQueryEventArgs e)
         {
-
+            IGame game = Game.GetGameWithUserId(e.CallbackQuery.From.Id);
+            
+            
+            if (game != null && game.room.InGame)
+            {
+                var role = game.roles.FirstOrDefault(x => x.user.Id == e.CallbackQuery.From.Id);
+                if (role == null) return;
+                
+                if(role is Mafia)
+                {
+                    
+                }
+            }
+            
             switch (e.CallbackQuery.Data)
             {
                 case "CheckAdminsRoot":
@@ -143,7 +159,6 @@ namespace TelegramBotMafia
 
                     break;
                 case "ConnectToGame":
-                    IGame game = Game.GetGameOrNull(e.CallbackQuery.Message.Chat.Id);
                     if (game == null) return;
 
                     await Program.bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id,

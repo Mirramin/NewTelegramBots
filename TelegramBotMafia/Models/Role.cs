@@ -8,10 +8,8 @@ namespace TelegramBotMafia.Models
         public User user { get; set; }
         public string name { get; set; }
         public int priority { get; set; }
-        
-        
-        
-        
+
+        public bool IsDead { get; set; }
     }
 
     public class People : Role
@@ -21,6 +19,7 @@ namespace TelegramBotMafia.Models
             base.user = user;
             base.name = "Мирний";
             base.priority = 3;
+            IsDead = false;
         }
     }
     
@@ -32,6 +31,7 @@ namespace TelegramBotMafia.Models
             base.user = user;
             base.name = "Мафія";
             base.priority = 3;
+            IsDead = false;
         }
     }
 
@@ -51,6 +51,7 @@ namespace TelegramBotMafia.Models
             base.user = user;
             base.name = "Лікар";
             base.priority = 3;
+            IsDead = false;
         }
     }
     
@@ -61,6 +62,7 @@ namespace TelegramBotMafia.Models
             base.user = user;
             base.name = "Лікар";
             base.priority = 3;
+            IsDead = false;
         }
     }
 }
