@@ -10,7 +10,7 @@ namespace MathTeamBot
             {
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Підтвердити", $"AddNewChanel:{chanelId}"),
+                    InlineKeyboardButton.WithCallbackData("Включити", $"AddNewChanel:{chanelId}"),
                     InlineKeyboardButton.WithCallbackData("Вийти з цього каналу", $"LeaveFromChanel:{chanelId}"),
                 }
             });

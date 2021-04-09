@@ -68,6 +68,57 @@ namespace MathTeamBot
 
         public static async void OnCallBack(object sender, CallbackQueryEventArgs e)
         {
+            // Розбиває запит на частини команди, щоб розпарсити її покомпонентно
+            var Commands = e.CallbackQuery.Data.Split(":");
+
+            // Якщо команда складалась із двох компонентів
+            if (e.CallbackQuery.Message.Chat.Id == Settings.MainChat)
+            {
+                switch (Commands[0])
+                {
+                    // Обробробляє добавлення каналу в список каналів, з яких проводиться розсилка
+                    case "AddNewChanel":
+                        Settings.MajorChanels.Add(Convert.ToInt32(Commands[1]));
+                        
+                        Console.WriteLine(
+                            $"[log] Додано новий канал для розсилки. " +
+                            $"Додав - {e.CallbackQuery.From.Username}[{e.CallbackQuery.From.Id}]");
+                        
+                        await Program.bot.DeleteMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            e.CallbackQuery.Message.MessageId
+                        );
+                        
+                        await Program.bot.SendTextMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            "<h4>[log]</h4> Додано новий канал для розсилки. " +
+                            $"Додав - @{e.CallbackQuery.From.Username}[{e.CallbackQuery.From.Id}]",
+                            parseMode: ParseMode.Html
+                        );
+                        break;
+                    // Обробляє команду виходу із каналу
+                    case "LeaveFromChanel":
+                        await Program.bot.LeaveChatAsync(Commands[1]);
+                        
+                        Console.WriteLine(
+                            $"[log] Я вийшов із каналу id {Commands[1]}. " +
+                            $"Приказ від - {e.CallbackQuery.From.Username}[{e.CallbackQuery.From.Id}]");
+                        
+                        await Program.bot.DeleteMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            e.CallbackQuery.Message.MessageId
+                        );
+                        
+                        await Program.bot.SendTextMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            $"<h4>[log]</h4> Я вийшов із каналу id {Commands[1]}. " +
+                            $"Приказ від - @{e.CallbackQuery.From.Username}[{e.CallbackQuery.From.Id}]",
+                            parseMode: ParseMode.Html
+                        );
+                        break;
+                }
+            }
+            
             
         }
         
