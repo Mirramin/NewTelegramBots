@@ -1,7 +1,11 @@
+using Telegram.Bot.Types;
+using TelegramBotMafia.Interfaces;
+
 namespace TelegramBotMafia.Models
 {
-    public abstract class Role
+    public abstract class Role : IRole
     {
+        public User user { get; set; }
         public string name { get; set; }
         public int priority { get; set; }
         
@@ -12,8 +16,9 @@ namespace TelegramBotMafia.Models
 
     public class People : Role
     {
-        public People()
+        public People(User user)
         {
+            base.user = user;
             base.name = "Мирний";
             base.priority = 3;
         }
@@ -22,17 +27,38 @@ namespace TelegramBotMafia.Models
     
     public class Mafia : Role
     {
-        public Mafia()
+        public Mafia(User user)
         {
+            base.user = user;
             base.name = "Мафія";
+            base.priority = 3;
+        }
+    }
+
+    public class Don : Mafia
+    {
+        public Don(User user) : base(user)
+        {
+            base.name = "Дон";
             base.priority = 3;
         }
     }
     
     public class Doctor : Role
     {
-        public Doctor()
+        public Doctor(User user)
         {
+            base.user = user;
+            base.name = "Лікар";
+            base.priority = 3;
+        }
+    }
+    
+    public class Com : Role
+    {
+        public Com(User user)
+        {
+            base.user = user;
             base.name = "Лікар";
             base.priority = 3;
         }

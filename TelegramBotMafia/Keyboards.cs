@@ -22,8 +22,6 @@ namespace TelegramBotMafia
                 new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Приєднатись", "ConnectToGame"),
-                    InlineKeyboardButton.WithSwitchInlineQuery("test", "/start"),  
-                    
                 }
             });
         }

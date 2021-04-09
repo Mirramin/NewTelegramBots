@@ -11,11 +11,21 @@ namespace TelegramBotMafia.Models
         public Chat(long id)
         {
             this.Id = id;
+            Garbage = new List<int>();
+            InGame = false;
+            
+            startTime = 60;
+            countPlayers = 12;
+            voteTime = 30;
+            nigthTime = 120;
+            minCounterPeople = 2;
+            mafiaToPeople = 3;
         }
         
         public long Id { get; set; }
         public List<int> Garbage { get; set; }
         public int MsgAboutStartGameId { get; set; }
+        public bool InGame { get; set; }
         
         // setting room
         public int startTime { get; set; }
@@ -23,7 +33,7 @@ namespace TelegramBotMafia.Models
         public int voteTime { get; set; }
         public int nigthTime { get; set; }
         public int minCounterPeople { get; set; }
-        
+        public int mafiaToPeople { get; set; }
         
         public async Task<bool> CheckAdminsRoot()
         {

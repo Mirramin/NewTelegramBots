@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
 namespace TelegramBotMafia.Interfaces
@@ -10,6 +11,12 @@ namespace TelegramBotMafia.Interfaces
         
         // Список гравців
         public List<User> players { get; set; }
+        
+        // Список ідентифікаторів гравців, які хочуть приєднатись до гри
+        public List<long> ConnectedUsersId { get; set; }
+        
+        // Чекає time-секунд та розпочинає гру
+        public Task CloseConnectionsAndStartGame(int time);
         
         // Повернути список гравців як рядок
         public string PlayersToString();
