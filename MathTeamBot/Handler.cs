@@ -16,6 +16,12 @@ namespace MathTeamBot
                 if (Settings.MajorChanels.Contains(e.Message.Chat.Id))
                 {
                     // Пересилка цього повідомлення в чати
+                    await Program.bot.SendTextMessageAsync(
+                        Settings.MainChat,
+                        Text.SendMessageIntoAllChats(e.Message.Chat.Username),
+                        parseMode: ParseMode.Html,
+                        replyMarkup: Keyboards.SendMessageIntoAllChats(e.Message.MessageId, e.Message.Chat.Id)
+                    );
                 }
                 // Вітка обробки повідомлень із невідомих каналів
                 else
@@ -25,7 +31,7 @@ namespace MathTeamBot
                     {
                         await Program.bot.SendTextMessageAsync(
                             Settings.MainChat,
-                            Text.AddInNewChanelMessage(e.Message.Chat.Title),
+                            Text.AddInNewChanelMessage(e.Message.Chat.Title, e.Message.Chat.Username),
                             parseMode: ParseMode.Html,
                             replyMarkup: Keyboards.AddNewChanelMessage(e.Message.Chat.Id)
                         );
@@ -61,7 +67,18 @@ namespace MathTeamBot
                 // Обрабка повідомлень від адміністраторів
                 else if (Settings.Admins.Contains(e.Message.From.Id))
                 {
-                    
+                    switch (e.Message.Text)
+                    {
+                        // Надіслати доступне меню дій для адміністраторів в чат
+                        case "/start":
+                            await Program.bot.SendTextMessageAsync(
+                                e.Message.Chat.Id,
+                                Text.AddChatForSendMessage(),
+                                parseMode: ParseMode.Html,
+                                replyMarkup: Keyboards.AddChatForSendMessage(e.Message.Chat.Id)
+                            );
+                            break;
+                    }
                 }
             }
         }
@@ -115,6 +132,47 @@ namespace MathTeamBot
                             $"Приказ від - @{e.CallbackQuery.From.Username}[{e.CallbackQuery.From.Id}]",
                             parseMode: ParseMode.Html
                         );
+                        break;
+                    case "SendToAllChats":
+                        await Program.bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id,
+                            e.CallbackQuery.Message.MessageId);
+                        await Program.bot.SendTextMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            "Повідомлення розіслано!");
+
+                        foreach (var chatid in Settings.Chats)
+                        {
+                            await Program.bot.ForwardMessageAsync(
+                                chatid,
+                                Convert.ToInt32(Commands[2]),
+                                Convert.ToInt32(Commands[1])
+                            );
+                        }
+                        break;
+                    case "DontSendToAllChats":
+                        await Program.bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id,
+                            e.CallbackQuery.Message.MessageId);
+                        await Program.bot.SendTextMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            "Розсилку відмінено!");
+                        break;
+                    case "AddChatForSendMessage":
+                        Settings.Chats.Add(Convert.ToInt32(Commands[1]));
+                        await Program.bot.SendTextMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            "Тепер ви завжди будете в курсі останніх новин!");
+                        await Program.bot.DeleteMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            e.CallbackQuery.Message.MessageId);
+                        break;
+                    case "DontAddChatForSendMessage":
+                        await Program.bot.SendTextMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            "Ну і ладно! Я образився!");
+                        await Program.bot.DeleteMessageAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            e.CallbackQuery.Message.MessageId);
+                        await Program.bot.LeaveChatAsync(e.CallbackQuery.Message.Chat.Id);
                         break;
                 }
             }

@@ -15,5 +15,29 @@ namespace MathTeamBot
                 }
             });
         }
+        
+        public static InlineKeyboardMarkup SendMessageIntoAllChats(long msgId, long chanelId)
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Надіслати", $"SendToAllChats:{msgId}:{chanelId}"),
+                    InlineKeyboardButton.WithCallbackData("Не надсилати", $"DontSendToAllChats:{msgId}{chanelId}"),
+                }
+            });
+        }
+
+        public static InlineKeyboardMarkup AddChatForSendMessage(long chatId)
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Добавити", $"AddChatForSendMessage:{chatId}"),
+                    InlineKeyboardButton.WithCallbackData("Відмінити", $"DontAddChatForSendMessage:{chatId}"),
+                }
+            });
+        }
     }
 }
