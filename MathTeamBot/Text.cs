@@ -4,22 +4,28 @@ namespace MathTeamBot
     {
         public static string AddInNewChanelMessage(string name, string tname)
         {
-            return "<h1>Увага!</h1> " +
-                   $"<h4>Мене добавили в новий канал <b>{name}(@{tname})</b></h4>" +
-                   "<p>Включити розсилку повідомлень із цього чату?</p>";
+            return "<b>Увага!</b> \n " +
+                   $"Мене добавили в новий канал <b>{name}(@{tname}) </b>\n" +
+                   "Включити розсилку повідомлень із цього чату?";
         }
 
         public static string SendMessageIntoAllChats(string tname)
         {
-            return "<h1>Увага!</h1>" +
-                   $"<h4>На каналі @{tname} вийшов новий пост.</h4>" +
+            return "<b>Увага! </b> \n" +
+                   $"На каналі <b>@{tname}</b> вийшов новий пост. \n" +
                    "Переслати його у всі чати?";
         }
         
         public static string AddChatForSendMessage()
         {
-            return "<h1>Привіт!</h1>" +
-                   $"<h4>Виберіть потрібну вам дію!</h4>";
+            return "<b>Привіт!</b>" +
+                   $"\nВиберіть потрібну вам дію!";
         }
+
+        public static string CheckAdminsRoots = "<b>Для початку роботи дай мені такі права адміністратора:</b>" +
+                                                "\n- видаляти повідомлення" +
+                                                "\n- блокувати користувачів" +
+                                                "\n- закріплювати повідомлення";
+
     }
 }

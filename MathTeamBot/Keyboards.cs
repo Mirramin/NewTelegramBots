@@ -39,5 +39,16 @@ namespace MathTeamBot
                 }
             });
         }
+
+        public static InlineKeyboardMarkup CheckAdminsRoots()
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Готово", "CheckAdminsRoots"),
+                }
+            });
+        }
     }
 }
