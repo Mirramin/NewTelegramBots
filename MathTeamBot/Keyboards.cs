@@ -50,5 +50,23 @@ namespace MathTeamBot
                 }
             });
         }
+
+        public static InlineKeyboardMarkup CancelNewModer(long chatId, long userId, string userName)
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Відмінити",
+                    $"CancelNewModer:{chatId}:{userId}:{userName}"),
+            });
+        }
+
+        public static InlineKeyboardMarkup GiveMeModersRoot(long chatId, long userId, string userName)
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Отримати",
+                    $"GiveMeModersRoot:{chatId}:{userId}:{userName}"),
+            });
+        }
     }
 }

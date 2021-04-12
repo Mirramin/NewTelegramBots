@@ -21,6 +21,7 @@ namespace MathTeamBot
             // Вітка для обробки повідомлень із груп та супергруп
             else
             {
+                // При додаванні бота в якийсь чат 
                 if (e.Message.NewChatMembers != null &&
                     e.Message.NewChatMembers.FirstOrDefault(x => x.Id == Program.bot.BotId) != null)
                 {
@@ -33,6 +34,7 @@ namespace MathTeamBot
                     return;
                 }
                 
+                // Перевіряє права адміністратора
                 if (e.Message.LeftChatMember == null && !Program.CheckAdminsRoots(e.Message.Chat.Id).Result)
                 {
                     await Program.bot.SendTextMessageAsync(
@@ -95,7 +97,52 @@ namespace MathTeamBot
                                 replyMarkup: Keyboards.AddChatForSendMessage(e.Message.Chat.Id)
                             );
                             break;
+                        // Добавити нового профорга
+                        case "/newmoder":
+                            // Якщо до цього повідомлення прикріплено повідомлення від іншого користувача
+                            if (e.Message.ReplyToMessage != null)
+                            {
+                                if (Settings.Moders.FirstOrDefault(x => x == e.Message.ReplyToMessage.From.Id) != 0)
+                                {
+                                    await Program.bot.SendTextMessageAsync(
+                                        e.Message.Chat.Id,
+                                        $"У користувача @{e.Message.ReplyToMessage.From.Username} уже є права профорга"
+                                    );
+                                    return;
+                                }
+
+                                Settings.Moders.Add(e.Message.ReplyToMessage.From.Id);
+                                await Program.bot.SendTextMessageAsync(
+                                    Settings.MainChat,
+                                    $"Користувачу @{e.Message.ReplyToMessage.From.Username} надано права профорга",
+                                    replyMarkup: Keyboards.CancelNewModer(e.Message.Chat.Id, e.Message.From.Id, e.Message.From.Username)
+                                );
+                                await Program.bot.SendTextMessageAsync(
+                                    e.Message.Chat.Id,
+                                    $"Користувачу @{e.Message.ReplyToMessage.From.Username} надано права профорга"
+                                );
+                            }
+                            // Якщо не прикріплено - надати можливість приєднатись усім учасникам чату
+                            else
+                            {
+                                await Program.bot.SendTextMessageAsync(
+                                    e.Message.Chat.Id,
+                                    "Для отримання прав профорга - натисність \"Отримати\"!",
+                                    replyMarkup: Keyboards.GiveMeModersRoot(e.Message.Chat.Id, e.Message.From.Id, e.Message.From.Username)
+                                );
+                                await Program.bot.SendTextMessageAsync(
+                                    Settings.MainChat,
+                                    $"Адміністратор @{e.Message.From.Username} ініціював видачу прав профорга!"
+                                );
+                            }
+                            break;
                     }
+                }
+
+                // Обробка повідомлень від модераторів (профоргів)
+                if (Settings.Moders.Contains(e.Message.From.Id))
+                {
+                    
                 }
             }
         }
@@ -105,7 +152,7 @@ namespace MathTeamBot
             // Розбиває запит на частини команди, щоб розпарсити її покомпонентно
             var Commands = e.CallbackQuery.Data.Split(":");
 
-            // Якщо команда складалась із двох компонентів
+            // Якщо команда була відправлена із головного чату
             if (e.CallbackQuery.Message.Chat.Id == Settings.MainChat)
             {
                 switch (Commands[0])
@@ -150,6 +197,7 @@ namespace MathTeamBot
                             parseMode: ParseMode.Html
                         );
                         break;
+                    // Переслати повідомлення у всі чати
                     case "SendToAllChats":
                         await Program.bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id,
                             e.CallbackQuery.Message.MessageId);
@@ -166,6 +214,7 @@ namespace MathTeamBot
                             );
                         }
                         break;
+                    // Не пересилати повідомлення із каналу у всі чати
                     case "DontSendToAllChats":
                         await Program.bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id,
                             e.CallbackQuery.Message.MessageId);
@@ -173,18 +222,40 @@ namespace MathTeamBot
                             e.CallbackQuery.Message.Chat.Id,
                             "Розсилку відмінено!");
                         break;
+                    // Відмінити видачу прав модератора (профорга)
+                    case "CancelNewModer":
+                        Settings.Moders.Remove(Convert.ToInt64(Commands[1]));
+                        await Program.bot.EditMessageTextAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            e.CallbackQuery.Message.MessageId,
+                            "Відмінено!"
+                        );
+
+                        string msg = $"Адміністратор зняв з @{Commands[2]} права профорга.";
+
+                        await Program.bot.SendTextMessageAsync(
+                            Convert.ToInt64(Commands[0]),
+                            msg
+                        );
+                        break;
+                    
                 }
             }
             
             switch (Commands[0])
             {
+                // Перевіряє, що боту надані права адміністратора
                 case "CheckAdminsRoots":
                     if (Program.CheckAdminsRoots(e.CallbackQuery.Message.Chat.Id).Result)
                     {
-                        await Program.bot.DeleteMessageAsync(
-                            e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.Message.MessageId);
                         await Program.bot.AnswerCallbackQueryAsync(
                             e.CallbackQuery.Id, "Я отримав права адміністратора!");
+                        await Program.bot.EditMessageTextAsync(
+                            e.CallbackQuery.Message.Chat.Id,
+                            e.CallbackQuery.Message.MessageId,
+                            "Добавити розсилку повідомлень в цю групу із каналу t.me/mathfamily?",
+                            replyMarkup: Keyboards.AddChatForSendMessage(e.CallbackQuery.Message.Chat.Id)
+                        );
                     }
                     else
                     {
@@ -192,8 +263,9 @@ namespace MathTeamBot
                             e.CallbackQuery.Id, "Права не надані!", showAlert: true);
                     }
                     break;
+                // Добавляє чат для розсилки повідомлень
                 case "AddChatForSendMessage":
-                    if (Settings.Admins.FirstOrDefault(x => x == e.CallbackQuery.From.Id) != 0)
+                    if (Settings.Moders.FirstOrDefault(x => x == e.CallbackQuery.From.Id) != 0)
                     {
                         Settings.Chats.Add(Convert.ToInt64(Commands[1]));
                         await Program.bot.SendTextMessageAsync(
@@ -209,9 +281,10 @@ namespace MathTeamBot
                             e.CallbackQuery.Id, "Ця функція доступна тільки профоргам!", showAlert: true);
                     }
                     break;
+                // Не добавляти чат для розсилки та вийти з чату
                 case "DontAddChatForSendMessage":
 
-                    if (Settings.Admins.FirstOrDefault(x => x == e.CallbackQuery.From.Id) != 0)
+                    if (Settings.Moders.FirstOrDefault(x => x == e.CallbackQuery.From.Id) != 0)
                     {
                         await Program.bot.SendTextMessageAsync(
                             e.CallbackQuery.Message.Chat.Id,
@@ -226,6 +299,26 @@ namespace MathTeamBot
                         await Program.bot.AnswerCallbackQueryAsync(
                             e.CallbackQuery.Id, "Ця функція доступна тільки профоргам!", showAlert: true);
                     }
+                    break;
+                // Надати права модератора (профорга)
+                case "GiveMeModersRoot":
+                    if (Settings.Moders.FirstOrDefault(x => x == e.CallbackQuery.From.Id) != 0)
+                    {
+                        await Program.bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id,
+                            "У вас уже є права профорга!", true);
+                        return;
+                    }
+
+                    Settings.Moders.Add(e.CallbackQuery.From.Id);
+                    await Program.bot.SendTextMessageAsync(
+                        Settings.MainChat,
+                        $"Користувачу @{e.CallbackQuery.From.Username} надано права профорга",
+                        replyMarkup: Keyboards.CancelNewModer(e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.From.Id, e.CallbackQuery.From.Username)
+                    );
+                    await Program.bot.SendTextMessageAsync(
+                        e.CallbackQuery.Message.Chat.Id,
+                        $"Користувачу @{e.CallbackQuery.From.Username} надано права профорга"
+                    );
                     break;
             }
             

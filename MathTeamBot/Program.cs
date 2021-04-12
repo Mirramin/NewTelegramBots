@@ -18,6 +18,7 @@ namespace MathTeamBot
             Console.WriteLine($"[log] Bot is running..");
             
             Settings.Admins.Add(Settings.OWNER);
+            Settings.Moders.Add(Settings.OWNER);
             bot.StartReceiving();
             bot.OnUpdate += Handler.OnUpdate;
             bot.OnMessage += Handler.OnMessage;
