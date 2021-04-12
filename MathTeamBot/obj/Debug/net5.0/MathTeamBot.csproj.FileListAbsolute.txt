@@ -16,3 +16,4 @@
 /Users/vadya-ya/Desktop/C#_/TelegramBotMafia/MathTeamBot/obj/Debug/net5.0/ref/MathTeamBot.dll
 /Users/vadya-ya/Desktop/C#_/TelegramBotMafia/MathTeamBot/obj/Debug/net5.0/MathTeamBot.pdb
 /Users/vadya-ya/Desktop/C#_/TelegramBotMafia/MathTeamBot/obj/Debug/net5.0/MathTeamBot.genruntimeconfig.cache
+/Users/vadya-ya/Desktop/C#_/TelegramBotMafia/MathTeamBot/bin/Debug/net5.0/Npgsql.dll

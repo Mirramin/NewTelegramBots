@@ -57,7 +57,9 @@ namespace MathTeamBot
                             Program.Stop();
                             break;
                         case "/setchat":
+                            DataBase.DB.DeleteMainChat(Settings.MainChat);
                             Settings.MainChat = e.Message.Chat.Id;
+                            DataBase.DB.AddChat(Settings.MainChat, true);
                             await Program.bot.DeleteMessageAsync(e.Message.Chat.Id, e.Message.MessageId);
                             await Program.bot.SendTextMessageAsync(e.Message.Chat.Id, "Оновлено основний чат.");
                             break;
@@ -73,7 +75,9 @@ namespace MathTeamBot
                             if (e.Message.ReplyToMessage != null)
                             {
                                 Settings.Admins.Add(e.Message.ReplyToMessage.From.Id);
+                                DataBase.DB.AddMembers("admins", e.Message.ReplyToMessage.From.Id);
                                 Settings.Moders.Add(e.Message.ReplyToMessage.From.Id);
+                                DataBase.DB.AddMembers("moders", e.Message.ReplyToMessage.From.Id);
                                 await Program.bot.SendTextMessageAsync(
                                     e.Message.Chat.Id,
                                     $"Користувачу @{e.Message.ReplyToMessage.From.Username} надано права адміністратора"
@@ -112,6 +116,7 @@ namespace MathTeamBot
                                 }
 
                                 Settings.Moders.Add(e.Message.ReplyToMessage.From.Id);
+                                DataBase.DB.AddMembers("moders", e.Message.ReplyToMessage.From.Id);
                                 await Program.bot.SendTextMessageAsync(
                                     Settings.MainChat,
                                     $"Користувачу @{e.Message.ReplyToMessage.From.Username} надано права профорга",
@@ -128,7 +133,7 @@ namespace MathTeamBot
                                 await Program.bot.SendTextMessageAsync(
                                     e.Message.Chat.Id,
                                     "Для отримання прав профорга - натисність \"Отримати\"!",
-                                    replyMarkup: Keyboards.GiveMeModersRoot(e.Message.Chat.Id, e.Message.From.Id, e.Message.From.Username)
+                                    replyMarkup: Keyboards.GiveMeModersRoot()
                                 );
                                 await Program.bot.SendTextMessageAsync(
                                     Settings.MainChat,
@@ -159,7 +164,8 @@ namespace MathTeamBot
                 {
                     // Обробробляє добавлення каналу в список каналів, з яких проводиться розсилка
                     case "AddNewChanel":
-                        Settings.MajorChanels.Add(Convert.ToInt64(Commands[1]));
+                        Settings.Chanels.Add(Convert.ToInt64(Commands[1]));
+                        DataBase.DB.AddChanel(Convert.ToInt64(Commands[1]));
                         
                         Console.WriteLine(
                             $"<b>[log] Додано новий канал для розсилки. </b> \n" +
@@ -224,17 +230,18 @@ namespace MathTeamBot
                         break;
                     // Відмінити видачу прав модератора (профорга)
                     case "CancelNewModer":
-                        Settings.Moders.Remove(Convert.ToInt64(Commands[1]));
+                        Settings.Moders.Remove(Convert.ToInt64(Commands[2]));
+                        DataBase.DB.DeleteModerRoot(Convert.ToInt64(Commands[2]));
                         await Program.bot.EditMessageTextAsync(
                             e.CallbackQuery.Message.Chat.Id,
                             e.CallbackQuery.Message.MessageId,
                             "Відмінено!"
                         );
 
-                        string msg = $"Адміністратор зняв з @{Commands[2]} права профорга.";
+                        string msg = $"Адміністратор зняв з @{Commands[3]} права профорга.";
 
                         await Program.bot.SendTextMessageAsync(
-                            Convert.ToInt64(Commands[0]),
+                            Convert.ToInt64(Commands[1]),
                             msg
                         );
                         break;
@@ -268,6 +275,7 @@ namespace MathTeamBot
                     if (Settings.Moders.FirstOrDefault(x => x == e.CallbackQuery.From.Id) != 0)
                     {
                         Settings.Chats.Add(Convert.ToInt64(Commands[1]));
+                        DataBase.DB.AddChat(Convert.ToInt64(Commands[1]));
                         await Program.bot.SendTextMessageAsync(
                             e.CallbackQuery.Message.Chat.Id,
                             "Тепер ви завжди будете в курсі останніх новин!");
@@ -310,6 +318,7 @@ namespace MathTeamBot
                     }
 
                     Settings.Moders.Add(e.CallbackQuery.From.Id);
+                    DataBase.DB.AddMembers("moders", e.CallbackQuery.From.Id);
                     await Program.bot.SendTextMessageAsync(
                         Settings.MainChat,
                         $"Користувачу @{e.CallbackQuery.From.Username} надано права профорга",
@@ -331,7 +340,7 @@ namespace MathTeamBot
             {
 
                 // Вітка обробки повідомлень в каналах, звідки буде проводитись розсилка
-                if (Settings.MajorChanels.Contains(e.Update.ChannelPost.Chat.Id))
+                if (Settings.Chanels.Contains(e.Update.ChannelPost.Chat.Id))
                 {
                     // Пересилка цього повідомлення в чати
                     await Program.bot.SendTextMessageAsync(

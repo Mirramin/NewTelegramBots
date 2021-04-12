@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+PNOCLC33xpgJD96cgdwN86TAD/uu2fryKV/gUmvDTULJp0TjnySKHt5jQTr9jPlpelqY8bToaD5lBkv5lqHhw==",
+  "dgSpecHash": "u0W4rDfDwOX99Ot6QBJU5D40R+VVwV3OulZXDumDzWf804KRA1f/o4rMXMFNqq88nWxmDr79W79DWNEfhh6SIw==",
   "success": true,
   "projectFilePath": "/Users/vadya-ya/Desktop/C#_/TelegramBotMafia/TelegramBotMafia/TelegramBotMafia.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "/Users/vadya-ya/.nuget/packages/microsoft.win32.primitives/4.3.0/microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/netstandard.library/1.6.1/netstandard.library.1.6.1.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/newtonsoft.json/11.0.2/newtonsoft.json.11.0.2.nupkg.sha512",
+    "/Users/vadya-ya/.nuget/packages/npgsql/6.0.0-preview2/npgsql.6.0.0-preview2.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl/4.3.0/runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl/4.3.0/runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl/4.3.0/runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
@@ -59,6 +60,7 @@
     "/Users/vadya-ya/.nuget/packages/system.reflection.typeextensions/4.3.0/system.reflection.typeextensions.4.3.0.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/system.resources.resourcemanager/4.3.0/system.resources.resourcemanager.4.3.0.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/system.runtime/4.3.0/system.runtime.4.3.0.nupkg.sha512",
+    "/Users/vadya-ya/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/system.runtime.extensions/4.3.0/system.runtime.extensions.4.3.0.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/system.runtime.handles/4.3.0/system.runtime.handles.4.3.0.nupkg.sha512",
     "/Users/vadya-ya/.nuget/packages/system.runtime.interopservices/4.3.0/system.runtime.interopservices.4.3.0.nupkg.sha512",

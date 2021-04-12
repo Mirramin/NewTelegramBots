@@ -60,12 +60,12 @@ namespace MathTeamBot
             });
         }
 
-        public static InlineKeyboardMarkup GiveMeModersRoot(long chatId, long userId, string userName)
+        public static InlineKeyboardMarkup GiveMeModersRoot()
         {
             return new InlineKeyboardMarkup(new[]
             {
                 InlineKeyboardButton.WithCallbackData("Отримати",
-                    $"GiveMeModersRoot:{chatId}:{userId}:{userName}"),
+                    $"GiveMeModersRoot"),
             });
         }
     }
