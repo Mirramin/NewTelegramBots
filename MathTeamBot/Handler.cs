@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using MathTeamBot.Handlers;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
 
@@ -9,14 +10,28 @@ namespace MathTeamBot
     {
         public static async void OnMessage(object sender, MessageEventArgs e)
         {
-            
-            
-            // Вітка для обробки повідомлень із особистих повідомлень
+            // Вітка для обробки повідомлень із приватних чатів
             if (e.Message.Chat.Type == ChatType.Private)
             {
-
-                await Program.bot.SendTextMessageAsync(e.Message.From.Id, "Було, є і буде так: кращим з кращих є МАТФАК ");
-
+                if (Settings.Admins.Contains(e.Message.From.Id))
+                {
+                    switch (e.Message.Text)
+                    {
+                        case "!adm":
+                            await Program.bot.SendTextMessageAsync(e.Message.From.Id, "Меню адміністратора:",
+                                replyMarkup: Keyboards.AdminsMenu());
+                            break;
+                        
+                        case "!post":
+                            await Program.bot.DeleteMessageAsync(e.Message.From.Id, e.Message.MessageId);
+                            await CreatePost.Create(e.Message.From.Id);
+                            break;
+                    }
+                }
+                else
+                {
+                    await Program.bot.SendTextMessageAsync(e.Message.From.Id, "Було, є і буде так: кращим з кращих є МАТФАК ");
+                }
             }
             // Вітка для обробки повідомлень із груп та супергруп
             else
@@ -85,10 +100,9 @@ namespace MathTeamBot
                             }
                             break;
                     }
-                } 
-                
+                }
                 // Обробка повідомлень від адміністраторів
-                if (Settings.Admins.Contains(e.Message.From.Id))
+                else if (Settings.Admins.Contains(e.Message.From.Id))
                 {
                     switch (e.Message.Text)
                     {
@@ -143,12 +157,13 @@ namespace MathTeamBot
                             break;
                     }
                 }
-
                 // Обробка повідомлень від модераторів (профоргів)
-                if (Settings.Moders.Contains(e.Message.From.Id))
+                else if (Settings.Moders.Contains(e.Message.From.Id))
                 {
                     
-                }
+                } 
+                // Фільтрація повідомлень в чатах
+                
             }
         }
 
@@ -246,6 +261,24 @@ namespace MathTeamBot
                         );
                         break;
                     
+                }
+            } 
+            else if (Settings.Admins.Contains(e.CallbackQuery.Message.Chat.Id))
+            {
+                // Запустити процес створення поста
+                if (e.CallbackQuery.Data == "StartCreatingPost")
+                {
+                    await Program.bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id,
+                        e.CallbackQuery.Message.MessageId);
+                    await CreatePost.Create(e.CallbackQuery.From.Id);
+                } 
+                else if (e.CallbackQuery.Data == "AdminsHelp")
+                {
+                    await Program.bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id, "В розробці!");
+                }
+                else
+                {
+                    await AdminsCmd.AdminsHandlers(sender, e, Commands);   
                 }
             }
             

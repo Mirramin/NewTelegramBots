@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using MathTeamBot.Interfaces;
+using MathTeamBot.Models;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MathTeamBot
@@ -68,5 +72,103 @@ namespace MathTeamBot
                     $"GiveMeModersRoot"),
             });
         }
+
+        public static InlineKeyboardMarkup CreatePost(int postId)
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Опублікувати пост", $"Post:Public:{postId}"),
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Добавити кнопку", $"Post:AddButton:{postId}"),
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Видалити кнопку", $"Post:StartDeleteButton:{postId}"),
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Редагувати текст", $"Post:EditText:{postId}"), 
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Змінити картинку", $"Post:EditPhoto:{postId}"),   
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Відмінити", $"Post:CancelCreate:{postId}"),
+                }
+            });
+        }
+
+        public static InlineKeyboardMarkup GenerateMarkup(List<Post.Button> buttons)
+        {
+            List<InlineKeyboardButton[]> markup = new List<InlineKeyboardButton[]>();
+            
+            foreach (var btn in buttons)
+            {
+                markup.Add(new[] {InlineKeyboardButton.WithUrl(btn.name, btn.url)} );
+            }
+
+            return new InlineKeyboardMarkup(markup.ToArray());
+        }
+
+        public static InlineKeyboardMarkup GenerateMarkup(IPost post)
+        {
+            List<InlineKeyboardButton[]> markup = new List<InlineKeyboardButton[]>();
+            
+            foreach (var btn in post.buttons)
+            {
+                markup.Add(new[] {InlineKeyboardButton.WithCallbackData(btn.name, 
+                    $"Post:DeleteButton:{btn.id}")} );
+            }
+            markup.Add(new[] {InlineKeyboardButton.WithCallbackData("Назад", 
+                $"Post:BackToMenu:{post.id}")} );
+            
+            return new InlineKeyboardMarkup(markup.ToArray());
+        }
+
+        public static InlineKeyboardMarkup PostBackToMenu(int postId)
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Відмінити", $"Post:BackToMenu:{postId}")
+                }
+            });
+        }
+
+        public static InlineKeyboardMarkup PostWasSended(int msgId, int postId)
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Відмінити", $"Post:CancelSending:{postId}:{msgId}"),
+                    InlineKeyboardButton.WithCallbackData("Все гуд", $"Post:Done:{postId}"),
+                }
+            });
+        }
+
+        public static InlineKeyboardMarkup AdminsMenu()
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Пост", "StartCreatingPost"),
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Допомога", "AdminsHelp"),
+                }
+            });
+        }
+        
+        
     }
 }

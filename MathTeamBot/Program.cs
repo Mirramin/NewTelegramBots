@@ -14,7 +14,7 @@ namespace MathTeamBot
         static void Main(string[] args)
         {
             bot = new TelegramBotClient(Settings.TOKEN);
-            DataBase.DB.DownloadDB();
+            //DataBase.DB.DownloadDB();
             
             Console.WriteLine($"[log] Bot is running..");
             

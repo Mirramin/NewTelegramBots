@@ -4,7 +4,7 @@ namespace MathTeamBot
 {
     public abstract class Settings
     {
-        public static readonly string TOKEN = "1700668234:AAF93osNBDnnB_vq4m19RiqPYPpm3aglMrY";
+        public static readonly string TOKEN = "1430787728:AAF9TxnmKInB6n8Bl-r7MndahQc223a9-cE";
         public static readonly long OWNER = 643559378;
         public static long MainChat = 0;
         public static List<long> Chats = new List<long>();

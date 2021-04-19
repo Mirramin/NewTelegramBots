@@ -14,9 +14,9 @@ namespace MathTeamBot.DataBase
         {
             conn.Open();
 
-            string script = $"INSERT INTO chats (telegram_id, is_main) VALUES ('{tgId}', '{IsMain}');";
-            var cmd = new NpgsqlCommand(script, conn);
-            cmd.ExecuteNonQuery();
+            //string script = $"INSERT INTO chats (telegram_id, is_main) VALUES ('{tgId}', '{IsMain}');";
+            //var cmd = new NpgsqlCommand(script, conn);
+            //cmd.ExecuteNonQuery();
             Console.WriteLine($"[{DateTime.Now.TimeOfDay}][DB] Добавлено чат.");
             conn.Close();
         }
@@ -25,9 +25,9 @@ namespace MathTeamBot.DataBase
         {
             conn.Open();
 
-            string script = $"DELETE FROM chats WHERE telegram_id = '{tgId}';";
-            var cmd = new NpgsqlCommand(script, conn);
-            cmd.ExecuteNonQuery();
+            //string script = $"DELETE FROM chats WHERE telegram_id = '{tgId}';";
+            //var cmd = new NpgsqlCommand(script, conn);
+            //cmd.ExecuteNonQuery();
             Console.WriteLine($"[{DateTime.Now.TimeOfDay}][DB] Видалено чат.");
             conn.Close();
         }
@@ -36,9 +36,9 @@ namespace MathTeamBot.DataBase
         {
             conn.Open();
             
-            string script = $"INSERT INTO {role} VALUES ('{tgId}');";
-            var cmd = new NpgsqlCommand(script, conn);
-            cmd.ExecuteNonQuery();
+            //string script = $"INSERT INTO {role} VALUES ('{tgId}');";
+            //var cmd = new NpgsqlCommand(script, conn);
+            //cmd.ExecuteNonQuery();
             Console.WriteLine($"[{DateTime.Now.TimeOfDay}][DB] Добавлено {role}.");
             conn.Close();
         }
@@ -58,9 +58,9 @@ namespace MathTeamBot.DataBase
         {
             conn.Open();
             
-            string script = $"INSERT INTO chanels VALUES ('{tgId}');";
-            var cmd = new NpgsqlCommand(script, conn);
-            cmd.ExecuteNonQuery();
+            //string script = $"INSERT INTO chanels VALUES ('{tgId}');";
+            //var cmd = new NpgsqlCommand(script, conn);
+            //cmd.ExecuteNonQuery();
             Console.WriteLine($"[{DateTime.Now.TimeOfDay}][DB] Добавлено канал.");
             conn.Close();
         }
